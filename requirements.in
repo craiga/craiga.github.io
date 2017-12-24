@@ -18,7 +18,4 @@ jsmin
 
 libsass
 xstatic-bootstrap-scss
-xstatic-font-awesome
 xstatic-jquery
-
-weasyprint
