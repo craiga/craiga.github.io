@@ -5,7 +5,7 @@ Raven.context(function () {
     keyLog.push(e.keyCode);
     if (keyLog.toString().indexOf(konami) >= 0) {
       $(document).unbind('keydown',arguments.callee);
-      alert('Response to Konami code coming soon.');
+      window.location.href = 'https://www.youtube.com/watch?v=S4ifNxLd25M';
     }
   });
 });
