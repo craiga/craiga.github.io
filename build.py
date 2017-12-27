@@ -7,14 +7,13 @@ import click
 import jinja2
 import lxml.html
 import sass
-import weasyprint
 from htmlmin import minify
 from markdown import markdown
 from jsmin import jsmin
-from xstatic.pkg import bootstrap_scss, font_awesome, jquery
+from xstatic.pkg import bootstrap_scss, jquery
 
 
-ASSET_MODULES = (bootstrap_scss, font_awesome, jquery)
+ASSET_MODULES = (bootstrap_scss, jquery)
 
 
 def files(directory_name, glob_pattern, *args, **kwargs):
@@ -118,15 +117,6 @@ def script_files(directory_name, *args, **kwargs):
         yield from fnames
 
 
-def build_pdf(output_dir):
-    """Build PDF versions of each content page."""
-    for html_file in files(output_dir, '*.html', label='Building PDFs'):
-        html = weasyprint.HTML(filename=html_file)
-        pdf_path = Path(output_dir,
-                        html_file.name.replace('.html', '.pdf'))
-        html.write_pdf(pdf_path)
-
-
 @click.command()
 @click.option('--content_dir',
               default='content',
@@ -148,17 +138,14 @@ def build_pdf(output_dir):
               default='docs',
               type=click.Path(writable=True, file_okay=False),
               help='Output directory.')
-@click.option('--no-pdf', is_flag=True, help='Do not render PDFs.')
 def build(**kwargs):
-    """Build content for craiga.id.au from a series of Markdown files."""
+    """Build content for uhf62.co.uk from a series of Markdown files."""
     build_content(kwargs['content_dir'],
                   kwargs['template_file'],
                   kwargs['output_dir'])
     build_style(kwargs['style_dir'], kwargs['output_dir'])
     build_script(kwargs['script_dir'], kwargs['output_dir'])
     copy_assets(kwargs['output_dir'])
-    if not kwargs['no_pdf']:
-        build_pdf(kwargs['output_dir'])
 
 
 if __name__ == '__main__':
