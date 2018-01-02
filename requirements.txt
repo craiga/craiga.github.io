@@ -28,7 +28,7 @@ markupsafe==1.0           # via jinja2
 mccabe==0.6.1             # via pylint
 olefile==0.44             # via pillow
 pdfrw==0.4                # via weasyprint
-pillow==4.3.0             # via cairosvg
+pillow==5.0.0             # via cairosvg
 pip-tools==1.11.0
 piprot==0.9.7
 pycodestyle==2.3.1
