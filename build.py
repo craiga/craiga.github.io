@@ -1,5 +1,6 @@
 """Build content for craiga.id.au from a series of Markdown files."""
 
+from datetime import datetime
 from pathlib import Path
 from shutil import copy
 
@@ -85,8 +86,10 @@ def build_content(content_dir, template_file, output_dir):
     for content_file in files(content_dir, '*.markdown',
                               label='Building content'):
         content = markdown_file_to_html(content_file)
-        title = title_from_html(content)
-        html = template.render(title=title, content=content, links=LINKS)
+        html = template.render(title=title_from_html(content),
+                               content=content,
+                               links=LINKS,
+                               cachebuster=int(datetime.now().timestamp()))
         html = minify(html, remove_optional_attribute_quotes=False)
         html_path = Path(output_dir,
                          content_file.name.replace('.markdown', '.html'))
