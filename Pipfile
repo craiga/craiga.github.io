@@ -19,6 +19,7 @@ xstatic-font-awesome = "*"
 xstatic-jquery = "*"
 weasyprint = "*"
 mdx-smartypants = "*"
+gitpython = "*"
 
 
 [dev-packages]

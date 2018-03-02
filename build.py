@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 """Build content for craiga.id.au from a series of Markdown files."""
 
-from datetime import datetime
 from pathlib import Path
 from shutil import copy
 
 import click
+import git
 import jinja2
 import lxml.html
 import sass
@@ -149,6 +149,12 @@ def title_from_html(html, default=''):
     return default
 
 
+def cachebuster_token():
+    """Generate a cache-busting token."""
+    repo = git.Repo()
+    return repo.head.object.hexsha[:8]
+
+
 def write_html(html, html_path):
     """Write HTML to the given path."""
     with html_path.open('w') as file:
@@ -164,7 +170,7 @@ def build_content(content_dir, template_file, output_dir):
         html = template.render(title=title_from_html(content),
                                content=content,
                                links=LINKS,
-                               cachebuster=int(datetime.now().timestamp()))
+                               cachebuster=cachebuster_token())
         html = minify(html, remove_optional_attribute_quotes=False)
         html_path = Path(output_dir,
                          content_file.name.replace('.markdown', '.html'))
