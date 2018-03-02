@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """Build content for craiga.id.au from a series of Markdown files."""
 
 from datetime import datetime
@@ -10,7 +11,9 @@ import lxml.html
 import sass
 import weasyprint
 from htmlmin import minify
-from markdown import markdown
+from markdown import markdown, inlinepatterns, extensions
+from markdown.util import etree
+from mdx_smartypants import SmartypantsExt
 from jsmin import jsmin
 from xstatic.pkg import bootstrap_scss, font_awesome, jquery
 
@@ -19,6 +22,7 @@ ASSET_MODULES = (bootstrap_scss, font_awesome, jquery)
 
 
 # 3-tuples of URLs, titles, and FontAwesome 4 class names.
+# Top 5 featured in sidebar.
 LINKS = (('/', 'Home', 'fa-home'),
          ('/cv', 'CV', 'fa-briefcase'),
          (
@@ -26,18 +30,46 @@ LINKS = (('/', 'Home', 'fa-home'),
              'LinkedIn',
              'fa-linkedin'
          ),
+         ('https://github.com/craiga', 'GitHub', 'fa-github'),
+         ('mailto:craiga@craiga.id.au', 'Email', 'fa-envelope'),
+         # Popular
+         ('https://facebook.com/craiga', 'Facebook', 'fa-facebook'),
+         ('https://www.instagram.com/_craiga/', 'Instagram', 'fa-instagram'),
+         ('https://twitter.com/_craiga', 'Twitter', 'fa-twitter'),
+         # Music
+         ('https://www.last.fm/user/craiganderson', 'Last.fm', 'fa-lastfm'),
+         (
+             'https://itunes.apple.com/profile/craigeanderson',
+             'Apple Music',
+             'fa-apple'
+         ),
+         ('https://bandcamp.com/craiga', 'Bandcamp', 'fa-bandcamp'),
+         ('https://soundcloud.com/craiga', 'SoundCloud', 'fa-soundcloud'),
+         ('https://www.discogs.com/user/craiga', 'Discogs', 'fa-volume-up'),
+         # Booze
+         ('https://untappd.com/user/craiganderson', 'Untappd', 'fa-beer'),
+         ('https://distiller.com/profile/craiga', 'Distiller', 'fa-glass'),
+         # Work
          (
              'https://www.nextfree.co.uk/for/craig-anderson',
              'Nextfree',
-             'fa-calendar',
+             'fa-calendar'
          ),
          ('https://uk.yunojuno.com/p/craiga', 'YunoJuno', 'fa-asterisk'),
-         ('https://github.com/craiga', 'GitHub', 'fa-github'),
-         ('https://twitter.com/_craiga', 'Twitter', 'fa-twitter'),
-         ('https://facebook.com/craiga', 'Facebook', 'fa-facebook'),
-         ('https://www.instagram.com/_craiga/', 'Instagram', 'fa-instagram'),
-         ('https://www.last.fm/user/craiganderson', 'Last.fm', 'fa-lastfm'),
-         ('mailto:craiga@craiga.id.au', 'Email', 'fa-envelope'))
+         ('https://bitbucket.org/craiganderson/', 'Bitbucket', 'fa-bitbucket'),
+         (
+             'https://stackoverflow.com/users/1852024/craig-anderson',
+             'Stack Overflow',
+             'fa-stack-overflow'
+         ),
+         # Other
+         ('http://amzn.eu/5UobAlG', 'Amazon', 'fa-amazon'),
+         ('https://www.goodreads.com/craiga', 'Goodreads', 'fa-book'),
+         ('https://www.meetup.com/members/24626782/', 'Meetup', 'fa-meetup'),
+         ('https://www.pinterest.co.uk/craiga/', 'Pinterest', 'fa-pinterest'),
+         ('https://www.reddit.com/user/craiga/', 'Reddit', 'fa-reddit'),
+         ('http://steamcommunity.com/id/craiga', 'Steam', 'fa-steam'),
+         ('http://blog.craiga.id.au/', 'Tumblr', 'fa-tumblr'))
 
 
 def files(directory_name, glob_pattern, *args, **kwargs):
@@ -57,11 +89,54 @@ def create_template(template_file):
     return jinja2.Template(template_content)
 
 
+class ExternalLinksPattern(inlinepatterns.Pattern):
+    """External link inline pattern handler for Python-Markdown."""
+
+    def __init__(self):
+        """Create pattern with fixed regular expression."""
+        super().__init__(r'\[external\-links\]')
+
+    def handleMatch(self, m):
+        """Handle [external-links] in Markdown."""
+        div = etree.Element('div')
+        div_classes = ' '.join(('list-group', 'links', 'row'))
+        div.set('class', div_classes)
+        for url, title, fa_class in LINKS:
+            if url.startswith(('http://', 'https://')):
+                anchor = etree.SubElement(div, 'a')
+                anchor_classes = ' '.join(('list-group-item',
+                                           'col-md-3',
+                                           'col-sm-4',
+                                           'col-xs-4'))
+                anchor.set('class', anchor_classes)
+                anchor.set('href', url)
+
+                icon = etree.SubElement(anchor, 'i')
+                icon_classes = ' '.join(('fa', fa_class, 'fa-fw'))
+                icon.set('class', icon_classes)
+                icon.set('aria-hidden', 'true')
+                icon.tail = '&nbsp; ' + title
+
+        return div
+
+
+class ExternalLinksExtension(extensions.Extension):
+    """Google Map extension for Python-Markdown."""
+
+    def extendMarkdown(self, md, md_globals):
+        """Register ExternalLinksPattern."""
+        md.inlinePatterns.add('google-map', ExternalLinksPattern(), '_end')
+
+
 def markdown_file_to_html(file_path):
     """Convert the markdown file to HTML."""
+    md_extensions = ('markdown.extensions.footnotes',
+                     'markdown.extensions.toc',
+                     'markdown.extensions.abbr',
+                     SmartypantsExt(configs={}),
+                     ExternalLinksExtension())
     with file_path.open() as file:
-        return markdown(file.read(),
-                        extensions=('markdown.extensions.footnotes',))
+        return markdown(file.read(), extensions=md_extensions)
 
 
 def title_from_html(html, default=''):
@@ -164,8 +239,15 @@ def update_cvs():
         ('YunoJuno', 'https://uk.yunojuno.com/profile/manage/'),
         (
             'DjangoGigs',
-            'https://djangogigs.com/developers/craig-anderson/edit/',
+            'https://djangogigs.com/developers/craig-anderson2/',
         ),
+        (
+            'JobServe',
+            'https://www.jobserve.com/gb/en/Candidate/MyProfile.aspx',
+        ),
+        ('Dice', ('https://uk.dice.com/dashboard/profiles/'
+                  'cbe4c8e43cfb622cf97d86572860760e')),
+        ('Honeypot', 'https://app.honeypot.io/profile'),
     )
     for title, url in msgs:
         template = ("I've you've updated your CV, maybe you should update {} "

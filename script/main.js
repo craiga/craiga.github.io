@@ -20,7 +20,7 @@ function konamiRotate(rotator) {
   );
 }
 
-Raven.context(function () {
+function konamiInit() {
   var keyLog = [];
   var konami = '38,38,40,40,37,39,37,39,66,65';
   $(document).keydown(function(e) {
@@ -31,4 +31,8 @@ Raven.context(function () {
       $('.konami-audio').get(0).play();
     }
   });
+}
+
+Raven.context(function () {
+  konamiInit();
 });
