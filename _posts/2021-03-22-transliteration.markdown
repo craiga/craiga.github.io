@@ -1,6 +1,5 @@
 ---
-title: HTMX & Django—bringing the new school to the old school
-date: 2021-05-17 10:00:00 +0100
-description:
-redirect_to: https://www.sharperinfo.com/post/htmx-django-bringing-the-new-school-to-the-old-school
+title: Transliteration—helping users get data from Word or Excel into legacy systems
+date: 2021-03-14 10:00:00 +0100
+redirect_to: https://www.sharperinfo.com/post/transliteration-helping-users-get-data-from-word-or-excel-into-legacy-systems
 ---
