@@ -9,7 +9,7 @@ I've been working from home and avoiding almost all physical contact with people
 
 I thought it would be fun to let my hair grow until I was able to visit a hairdresser again.
 
-Below is a timelapse of that hair growth.
+Below is a time-lapse of that hair growth.
 
 I finally gave up after 300 days and cut my beard.
 
