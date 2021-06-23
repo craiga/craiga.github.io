@@ -7,6 +7,15 @@ include-mobile-intro: true
 ---
 
 <article class="thing-i-built preview">
+  <figure><a href="https://mydatachameleon.com" data-fathom-goal-id="MTSWKGSU"><img src="/assets/screenshots/my-data-chameleon.jpg"></a></figure>
+  <div>
+    <h1><a href="https://mydatachameleon.com" data-fathom-goal-id="MTSWKGSU">My Data Chameleon</a></h1>
+    <p>Helps users prepare their energy efficiency program data for submission to the
+      California Public Utilities Commission.
+      Built for <a href="https://www.sharperinfo.com">Sharper Informatics Solutions</a>.</p>
+  </div>
+</article>
+<article class="thing-i-built preview">
   <figure><a href="https://mail.afgang.co.uk" data-fathom-goal-id="PJZLA0EY"><img src="/assets/screenshots/af-gang-mail.jpg"></a></figure>
   <div>
     <h1><a href="https://mail.afgang.co.uk" data-fathom-goal-id="PJZLA0EY">AF GANG Mail Exchange</a></h1>
@@ -40,6 +49,7 @@ include-mobile-intro: true
 </header>
 
 {% for post in site.posts %}
+
 <article class="preview">
   {% if post.image %}
     <figure><img src="{{ post.image }}" alt="{{ post.image_description }}"></figure>
