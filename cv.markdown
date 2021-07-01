@@ -27,7 +27,7 @@ I joined Sharper Informatics Solutions to found and run the development process 
 
 ### University of Strathclyde-based stealth-mode startup (Nov&nbsp;'20–now)
 
-I built a number of applications for a stealth-mode startup based in the [University of Strathclyde](http://strath.ac.uk) in Glasgow.
+I built a number of applications for a stealth-mode startup based in the [University of Strathclyde](https://www.strath.ac.uk) in Glasgow.
 
 ### Red Badger (Nov&nbsp;'19–April&nbsp;'20)
 
